@@ -52,7 +52,7 @@ export const RestaurantContextConstructor: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5001/restaurants/")
+    fetch("https://restaurants-data.onrender.com/restaurants/")
       .then((res) => res.json())
       .then((data) => {
         setRestaurants(data);
