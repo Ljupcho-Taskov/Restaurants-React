@@ -33,7 +33,7 @@ export const RestaurantContextConstructor: React.FC<Props> = ({ children }) => {
       address: "",
       slug: "",
       email: "",
-      id: 0,
+      id: "",
       reviewsList: [],
     },
   ]);

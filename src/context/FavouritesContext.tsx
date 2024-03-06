@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { Data } from "../types/types";
 
 interface FavoritesContextType {
-  favorites: number[];
-  toggleFavorite: (restaurantId: number) => void;
+  favorites: Data[];
+  addToFavorites: (restaurant: Partial<Data>) => void;
+  removeFromFavorites: (product: Partial<Data>) => void;
 }
 
 export const FavoritesContext = createContext<FavoritesContextType | undefined>(
@@ -14,28 +16,42 @@ interface Props {
 }
 
 export const FavoritesContextProvider: React.FC<Props> = ({ children }) => {
-  const [favorites, setFavorites] = useState<number[]>(
-    JSON.parse(localStorage.getItem("favorites") || "[]")
-  );
+  const [favorites, setFavorites] = useState<Data[]>([]);
 
-  const toggleFavorite = (restaurantId: number) => {
-    setFavorites((prevFavorites) => {
-      const index = prevFavorites.indexOf(restaurantId);
-      if (index !== -1) {
-        const updatedFavorites = [...prevFavorites];
-        updatedFavorites.splice(index, 1);
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-        return updatedFavorites;
-      } else {
-        const updatedFavorites = [...prevFavorites, restaurantId];
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-        return updatedFavorites;
-      }
-    });
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const addToFavorites = (restaurant: Partial<Data>) => {
+    const isRestaurantInFavorites = favorites.some(
+      (favoriteItem) => favoriteItem.id === restaurant.id
+    );
+
+    if (!isRestaurantInFavorites) {
+      setFavorites((prevFavorites) => [...prevFavorites, restaurant as Data]);
+    }
+  };
+  const removeFromFavorites = (restaurant: Partial<Data>) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.filter((item) => item.id !== restaurant.id)
+    );
+    localStorage.setItem(
+      "favorites",
+      JSON.stringify(favorites.filter((item) => item.id !== restaurant.id))
+    );
   };
 
   return (
-    <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>
+    <FavoritesContext.Provider
+      value={{ favorites, addToFavorites, removeFromFavorites }}
+    >
       {children}
     </FavoritesContext.Provider>
   );

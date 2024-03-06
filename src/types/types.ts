@@ -8,7 +8,7 @@ export interface Data {
   address: string;
   slug: string;
   email: string;
-  id: number;
+  id: string;
   reviewsList: ReviewsList[];
 }
 [];

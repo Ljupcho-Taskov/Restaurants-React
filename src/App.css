@@ -66,3 +66,11 @@ button {
 .red {
   color: #ff6247;
 }
+.scroll-button {
+  position: fixed;
+
+  background: #218838;
+  bottom: 20px;
+  width: 40px;
+  right: 5px;
+}

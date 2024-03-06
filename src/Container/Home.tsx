@@ -11,6 +11,7 @@ import PopularResaurants from "../components/PopularRestaurants";
 import SurpriseRestaurant from "../components/SurpriseRestaurant";
 import Favorites from "../components/Favorites";
 import { FavoritesContextProvider } from "../context/FavouritesContext";
+import ScrollButton from "../components/ScrollButton";
 
 const Home = () => {
   return (
@@ -27,6 +28,7 @@ const Home = () => {
                   <PopularResaurants />
                   <Cuisines />
                   <AllRestaurants />
+                  <ScrollButton />
                 </>
               }
             ></Route>

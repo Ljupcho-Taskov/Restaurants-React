@@ -5,48 +5,97 @@ import { Link } from "react-router-dom";
 import { RestaurantContext } from "../context/RestaurantContext";
 import Reveal from "./Reveal";
 
-interface RestaurantCardProps {
-  restaurant: Data;
-  addToFavorites: (restaurantId: number) => void;
+interface RestaurantCardProps extends Data {
+  index: number;
 }
 
-const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
-  const { favorites, toggleFavorite } = useFavorites();
+const RestaurantCard: React.FC<RestaurantCardProps> = ({
+  reviews,
+  parkinglot,
+  phone,
+  image,
+  restauranttype,
+  businessname,
+  address,
+  slug,
+  email,
+  id,
+  reviewsList,
+}) => {
+  const { favorites, addToFavorites, removeFromFavorites } = useFavorites();
   const { calculateAverageRating } = useContext(RestaurantContext);
+
+  const isFavorite = favorites.some((favoriteItem) => favoriteItem.id === id);
+
+  const handleToggleFavorite = (
+    event: React.MouseEvent<HTMLParagraphElement>
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (isFavorite) {
+      removeFromFavorites({
+        reviews,
+        parkinglot,
+        phone,
+        image,
+        restauranttype,
+        businessname,
+        address,
+        slug,
+        email,
+        id,
+        reviewsList,
+      });
+    } else {
+      addToFavorites({
+        reviews,
+        parkinglot,
+        phone,
+        image,
+        restauranttype,
+        businessname,
+        address,
+        slug,
+        email,
+        id,
+        reviewsList,
+      });
+    }
+  };
 
   return (
     <div className="col-12 col-sm-6 col-lg-4 mb-4 res">
       <Reveal>
-        <Link to={`/restaurant-details/${restaurant.businessname}`}>
+        <Link to={`/restaurant-details/${businessname}`}>
           <picture className="position-relative">
-            <img className="rounded-lg" src={restaurant.image} alt="" />
-            <i
-              className={`fa-heart small-heart res ${
-                favorites.includes(restaurant.id) ? "fa-solid" : "fa-regular"
-              }`}
-              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                event.preventDefault();
-                toggleFavorite(restaurant.id);
-              }}
-            ></i>
+            <img className="rounded-lg" src={image} alt="" />
+
+            <span onClick={handleToggleFavorite}>
+              {isFavorite ? (
+                <i className="fa-heart small-heart fa-solid"></i>
+              ) : (
+                <i className="fa-heart small-heart fa-regular"></i>
+              )}
+            </span>
           </picture>
           <div
             style={{ height: "160px" }}
             className="bg-light rounded-bottom py-1 px-2"
           >
-            <h5>{restaurant.businessname}</h5>
-            <p className="bold red">{restaurant.restauranttype}</p>
+            <h5>{businessname}</h5>
+            <p className="bold red">{restauranttype}</p>
 
-            {restaurant.reviewsList.length === 0 ? null : (
+            {reviewsList.length === 0 ? null : (
               <div>
                 <p>
                   <span className="bold"> Based on </span>
-                  {restaurant.reviewsList.length}
-                  {restaurant.reviewsList.length === 1 ? " review" : " reviews"}
+                  {reviewsList.length}
+                  {reviewsList.length === 1 ? " review" : " reviews"}
                 </p>
                 <p>
                   <span className="bold">Ratings: </span>
-                  {calculateAverageRating(restaurant.reviewsList).toFixed(2)}
+                  {calculateAverageRating(reviewsList).toFixed(2)}
                 </p>
               </div>
             )}
