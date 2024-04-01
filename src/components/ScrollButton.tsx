@@ -4,9 +4,7 @@ const ScrollButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Function to handle scroll event
     const handleScroll = () => {
-      // Check if user has scrolled down by certain amount, e.g., 400px
       if (window.scrollY > 400) {
         setIsVisible(true);
       } else {
@@ -14,14 +12,12 @@ const ScrollButton = () => {
       }
     };
 
-    // Attach event listener when component mounts
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup: remove event listener when component unmounts
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []); // Run this effect only once when component mounts
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
